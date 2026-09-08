@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ajouter une tâche</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen py-10">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">Nouvelle tâche</h1>
+
+      <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Titre</label
+          >
+          <input
+            type="text"
+            name="title"
+            required
+            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Description</label
+          >
+          <textarea
+            name="description"
+            rows="3"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700"
+        >
+          Créer
+        </button>
+      </form>
+
+      <a
+        href="{% url 'task_list' %}"
+        class="inline-block mt-4 text-sm text-gray-500 hover:text-gray-700"
+      >
+        ← Retour à la liste
+      </a>
+    </div>
+  </body>
+</html>

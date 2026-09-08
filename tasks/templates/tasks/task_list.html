@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen py-10">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold text-gray-800">Mes tâches</h1>
+
+        <div class="flex items-center gap-2 relative">
+          <div
+            class="w-10 h-10 rounded-full overflow-hidden bg-blue-600 text-white flex items-center justify-center font-semibold"
+          >
+            {% if user.profile.photo %}
+            <img
+              src="{{ user.profile.photo.url }}"
+              class="w-full h-full object-cover"
+            />
+            {% else %} {{ user.username|first|upper }} {% endif %}
+          </div>
+          <button
+            onclick="
+              document.getElementById('user-menu').classList.toggle('hidden')
+            "
+            class="text-gray-500 hover:text-gray-700"
+          >
+            ▼
+          </button>
+
+          <div
+            id="user-menu"
+            class="hidden absolute top-12 right-0 bg-white border border-gray-200 rounded-md shadow-lg w-48 py-2 z-10"
+          >
+            <p class="px-4 py-2 text-sm text-gray-500 border-b border-gray-100">
+              {{ user.username }}
+            </p>
+            <form
+              id="photo-form"
+              action="{% url 'update_photo' %}"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <input
+                type="file"
+                name="photo"
+                id="photo-input"
+                accept="image/*"
+                class="hidden"
+                onchange="document.getElementById('photo-form').submit()"
+              />
+              <label
+                for="photo-input"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+              >
+                📷 Changer la photo
+              </label>
+            </form>
+            <a
+              href="{% url 'logout' %}"
+              class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+            >
+              ↪ Se déconnecter
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a
+        href="{% url 'task_create' %}"
+        class="inline-block mb-4 text-sm font-medium text-blue-600 hover:text-blue-800"
+      >
+        + Ajouter une tâche
+      </a>
+
+      <ul class="space-y-2">
+        {% for task in tasks %}
+        <li
+          class="flex items-center justify-between p-3 border border-gray-200 rounded-md"
+        >
+          <div>
+            <p
+              class="font-semibold text-gray-800 {% if task.done %}line-through text-gray-400{% endif %}"
+            >
+              {{ task.title }}
+            </p>
+            <p class="text-sm text-gray-500">{{ task.description }}</p>
+          </div>
+          <div class="flex gap-3 text-sm">
+            <a
+              href="{% url 'task_toggle_done' task.pk %}"
+              class="text-green-600 hover:text-green-800"
+            >
+              {% if task.done %}Non fait{% else %}Fait{% endif %}
+            </a>
+            <a
+              href="{% url 'task_delete' task.pk %}"
+              onclick="return confirm('Supprimer cette tâche ?');"
+              class="text-red-600 hover:text-red-800"
+            >
+              Supprimer
+            </a>
+          </div>
+        </li>
+        {% empty %}
+        <li class="text-gray-400 text-sm">Aucune tâche pour l'instant.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
