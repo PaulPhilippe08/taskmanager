@@ -89,14 +89,10 @@ WSGI_APPLICATION = 'taskmanager_project.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'taskmanager_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres2026',
-        'HOST': 'localhost',
-        'PORT': '5433',
-    }
+    'default': dj_database_url.config(
+        default=f"postgresql://postgres:postgres2026@localhost:5433/taskmanager_db",
+        conn_max_age=600,
+    )
 }
 
 
